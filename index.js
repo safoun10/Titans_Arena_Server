@@ -39,6 +39,11 @@ async function run() {
 
             app.get("/Games", async (req, res)=>{
                 let query = {}
+                if (req.query?.category === "All Games") {
+                    const result = await allData.find().toArray()
+                    res.send(result)
+                    return
+                }
                 if (req.query?.category) {
                     query = { category: req.query.category };
                   }
