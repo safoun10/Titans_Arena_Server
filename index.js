@@ -11,8 +11,9 @@ app.use(cors());
 app.use(express.json());
 
 
-const uri = "mongodb://0.0.0.0:27017/";
-// const uri = "mongodb+srv://<username>:<password>@cluster0.qawsvmr.mongodb.net/?retryWrites=true&w=majority";
+
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env
+.DB_PASS}@techtitans.gvuoct6.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -26,11 +27,31 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
         // Connect the client to the server    (optional starting in v4.7)
-        // await client.connect();
+        await client.connect();
         // Send a ping to confirm a successful connection
 
+
+        const allData = client.db('titanArena').collection('games')
+
+      
+
+        // Nabil brach
+
+            app.get("/Games", async (req, res)=>{
+                let query = {}
+                if (req.query?.category) {
+                    query = { category: req.query.category };
+                  }
+                  const result = await allData.find(query).toArray();
+                  res.send(result);
+            })
+
+
+        // saiful bhi bra
+
+
         app.get("/", (req, res) => {
-            res.send("server is runing");
+            res.send("TitanArena is runing");
         });
 
         await client.db("admin").command({ ping: 1 });
