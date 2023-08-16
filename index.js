@@ -31,7 +31,7 @@ async function run() {
         // Send a ping to confirm a successful connection
 
 
-        const allData = client.db('titanArena').collection('games')
+        const allData = client.db('titanArena').collection('games2')
 
       
 
