@@ -31,7 +31,7 @@ async function run() {
         // Send a ping to confirm a successful connection
 
 
-        const allData = client.db('titanArena').collection('games')
+        const allGames = client.db('titanArena').collection('games')
 
       
 
@@ -39,16 +39,24 @@ async function run() {
             app.get("/Games", async (req, res)=>{
                 let query = {}
                 if (req.query?.category === "All Games") {
-                    const result = await allData.find().toArray()
+                    const result = await allGames.find().toArray()
                     res.send(result)
                     return
                 }
                 if (req.query?.category) {
                     query = { category: req.query.category };
                   }
-                  const result = await allData.find(query).toArray();
+                  const result = await allGames.find(query).toArray();
                   res.send(result);
             })
+
+            app.get("/searchGames", async (req, res) => {
+                // console.log(req.query.search)
+                const search = req.query.search;
+                const query = { title: { $regex: search } };
+                const result = await allGames.find(query).toArray();
+                res.send(result);
+              });
 
 
         // saiful bhi bra
