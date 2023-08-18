@@ -3,7 +3,7 @@ const app = express();
 const cors = require("cors");
 // const jwt = require("jsonwebtoken");
 require("dotenv").config();
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT || 5000;
 
 // middleware
@@ -36,8 +36,7 @@ async function run() {
       
 
         // Nabil brach
-
-            app.get("/Games", async (req, res)=>{
+            app.get("/games", async (req, res)=>{
                 let query = {}
                 if (req.query?.category === "All Games") {
                     const result = await allData.find().toArray()
@@ -50,7 +49,14 @@ async function run() {
                   const result = await allData.find(query).toArray();
                   res.send(result);
             })
-
+        // AlaminHasan Branch
+        app.get("/games/:id", async (req, res) => {
+            const id = req.params.id;
+            const result = await allData.findOne({
+              _id: new ObjectId(id),
+            });
+            res.send(result);
+          });
 
         // saiful bhi bra
 
