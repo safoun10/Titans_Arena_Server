@@ -13,7 +13,7 @@ app.use(express.json());
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env
-.DB_PASS}@techtitans.gvuoct6.mongodb.net/?retryWrites=true&w=majority`;
+    .DB_PASS}@techtitans.gvuoct6.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -33,23 +33,25 @@ async function run() {
 
         const allData = client.db('titanArena').collection('games')
 
-      
 
-        // Nabil brach
 
-            app.get("/Games", async (req, res)=>{
-                let query = {}
-                if (req.query?.category === "All Games") {
-                    const result = await allData.find().toArray()
-                    res.send(result)
-                    return
-                }
-                if (req.query?.category) {
-                    query = { category: req.query.category };
-                  }
-                  const result = await allData.find(query).toArray();
-                  res.send(result);
-            })
+        // Nabil brach 
+
+        //  Rakib brach
+
+        app.get("/Games", async (req, res) => {
+            let query = {}
+            if (req.query?.category === "All Games") {
+                const result = await allData.find().toArray()
+                res.send(result)
+                return
+            }
+            if (req.query?.category) {
+                query = { category: req.query.category };
+            }
+            const result = await allData.find(query).toArray();
+            res.send(result);
+        })
 
 
         // saiful bhi bra
