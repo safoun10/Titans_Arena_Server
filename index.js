@@ -32,12 +32,12 @@ async function run() {
 
 
         const allData = client.db('titanArena').collection('games')
-
+        const usersCollection = client.db("titanArena").collection("users");
 
 
         // Nabil brach 
 
-        //  Rakib brach
+
 
         app.get("/Games", async (req, res) => {
             let query = {}
@@ -56,6 +56,25 @@ async function run() {
 
         // saiful bhi bra
 
+
+
+
+
+
+
+        //  create user rakib01110 branch
+        app.post("/users", async (req, res) => {
+            const users = req.body
+
+            const queary = { email: users.email }
+            const existingEmail = await usersCollection.findOne(queary)
+            console.log("existing User", existingEmail);
+            if (existingEmail) {
+                return res.send({ message: "user allready added" })
+            }
+            const result = await usersCollection.insertOne(users)
+            res.send(result)
+        })
 
         app.get("/", (req, res) => {
             res.send("TitanArena is runing");
