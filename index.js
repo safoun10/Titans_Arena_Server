@@ -10,6 +10,7 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
+
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@techtitans.gvuoct6.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -24,7 +25,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server    (optional starting in v4.7)
-    await client.connect();
+    client.connect();
     // Send a ping to confirm a successful connection
 
     const allGames = client.db("titanArena").collection("games");
@@ -76,7 +77,9 @@ async function run() {
     // await client.close();
   }
 }
-run().catch(console.dir);
+run().catch((error) => {
+  console.error("Error during server startup:", error);
+});
 
 app.listen(port, (req, res) => {
   console.log("Titans Arena is sitting on port", port);
