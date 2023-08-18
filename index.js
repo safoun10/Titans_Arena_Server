@@ -62,7 +62,11 @@ async function run() {
 
 
 
-        //  create user rakib01110 branch
+        //  create user rakib01110 branch 
+        app.get("/users", async (req, res) => {
+            const user = await usersCollection.find().toArray()
+            res.send(user)
+        })
         app.post("/users", async (req, res) => {
             const users = req.body
 
