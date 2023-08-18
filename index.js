@@ -30,7 +30,7 @@ async function run() {
 
     const allGames = client.db("titanArena").collection("games");
 
-    // Nabil brach
+    // Nabil branch
     app.get("/games", async (req, res) => {
       let query = {};
       if (req.query?.category === "All Games") {
