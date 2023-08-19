@@ -10,9 +10,7 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@techtitans.gvuoct6.mongodb.net/?retryWrites=true&w=majority`;
-
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -31,7 +29,6 @@ async function run() {
 
     const allGames = client.db("titanArena").collection("games");
     const usersCollection = client.db("titanArena").collection("users");
-
 
     // Nabil brach
     app.get("/games", async (req, res) => {
@@ -65,33 +62,37 @@ async function run() {
       res.send(result);
     });
 
-   
+    //rakib01110 branch
+    app.get("/users", async (req, res) => {
+      const user = await usersCollection.find().toArray();
+      res.send(user);
+    });
+    app.post("/users", async (req, res) => {
+      const users = req.body;
 
-  //rakib01110 branch 
-        app.get("/users", async (req, res) => {
-            const user = await usersCollection.find().toArray()
-            res.send(user)
-        })
-        app.post("/users", async (req, res) => {
-            const users = req.body
+      const queary = { email: users.email };
+      const existingEmail = await usersCollection.findOne(queary);
+      console.log("existing User", existingEmail);
+      if (existingEmail) {
+        return res.send({ message: "user allready added" });
+      }
+      const result = await usersCollection.insertOne(users);
+      res.send(result);
+    });
 
-            const queary = { email: users.email }
-            const existingEmail = await usersCollection.findOne(queary)
-            console.log("existing User", existingEmail);
-            if (existingEmail) {
-                return res.send({ message: "user allready added" })
-            }
-            const result = await usersCollection.insertOne(users)
-            res.send(result)
-        })
+    
+    app.get("/", (req, res) => {
+      res.send("TitanArena is runing");
+    });
 
-
-        await client.db("admin").command({ ping: 1 });
-        console.log("Pinged your deployment. You successfully connected to MongoDB!");
-    } finally {
-        // Ensures that the client will close when you finish/error
-        // await client.close();
-    }
+    await client.db("admin").command({ ping: 1 });
+    console.log(
+      "Pinged your deployment. You successfully connected to MongoDB!"
+    );
+  } finally {
+    // Ensures that the client will close when you finish/error
+    // await client.close();
+  }
 }
 run().catch((error) => {
   console.error("Error during server startup:", error);
