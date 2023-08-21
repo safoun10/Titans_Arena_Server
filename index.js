@@ -14,7 +14,7 @@ const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@techtit
 
 // const uri = "mongodb://0.0.0.0:27017/";
 
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version+926
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -65,21 +65,18 @@ async function run() {
     });
 
     // Here is saiful Islam code
-    app.get("/blogs", async (req, res)=>{
+    app.get("/blogs", async (req, res) => {
       const result = await blogsCollection.find().toArray();
-      res.send(result);
-    })
-
-    app.get("/blogs/:id", async (req, res) => {
-      const id = req.params.id;
-      console.log(id);
-      const result = await blogsCollection.findOne({
-        _id: new ObjectId(id),
-      });
-      console.log(result);
       res.send(result);
     });
 
+    app.get("/blogs/:id", async (req, res) => {
+      const id = req.params.id;
+      const result = await blogsCollection.findOne({
+        _id: new ObjectId(id),
+      });
+      res.send(result);
+    });
 
     app.get("/", (req, res) => {
       res.send("TitanArena is runing");
