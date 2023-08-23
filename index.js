@@ -12,8 +12,6 @@ app.use(express.json());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@techtitans.gvuoct6.mongodb.net/?retryWrites=true&w=majority`;
 
-// const uri = "mongodb://0.0.0.0:27017/";
-
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version+926
 const client = new MongoClient(uri, {
   serverApi: {
@@ -31,6 +29,7 @@ async function run() {
 
     const allGames = client.db("titanArena").collection("games");
     const usersCollection = client.db("titanArena").collection("users");
+    const blogsCollection = client.db("titanArena").collection("blogs");
 
     // Nabil brach
     app.get("/games", async (req, res) => {
@@ -82,7 +81,30 @@ async function run() {
       res.send(result);
     });
 
-    
+    // Here is saiful Islam code
+    // get all the blogs from database
+    app.get("/blogs", async (req, res) => {
+      const result = await blogsCollection.find().toArray();
+      res.send(result);
+    });
+
+    // get a single blog
+    app.get("/blogs/:id", async (req, res) => {
+      const id = req.params.id;
+      const result = await blogsCollection.findOne({
+        _id: new ObjectId(id),
+      });
+      res.send(result);
+    });
+
+    // search blogs api created
+    app.get("/searchblogs", async (req, res) => {
+      const search = req.query.search;
+      const query = { title: { $regex: search, $options: "i" } };
+      const result = await blogsCollection.find(query).toArray();
+      res.send(result);
+    });
+
     app.get("/", (req, res) => {
       res.send("TitanArena is runing");
     });
