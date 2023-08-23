@@ -49,7 +49,7 @@ async function run() {
     app.get("/searchGames", async (req, res) => {
       // console.log(req.query.search)
       const search = req.query.search;
-      const query = { title: { $regex: search } };
+      const query = { title: { $regex: search, $options: "i" } };
       const result = await allGames.find(query).toArray();
       res.send(result);
     });
