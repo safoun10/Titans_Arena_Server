@@ -30,7 +30,7 @@ async function run() {
     // Send a ping to confirm a successful connection
 
     const allGames = client.db("titanArena").collection("games");
-    const blogsCollection = client.db("titanArena").collection("blogs");
+    const usersCollection = client.db("titanArena").collection("users");
 
     // Nabil brach
     app.get("/games", async (req, res) => {
@@ -64,20 +64,25 @@ async function run() {
       res.send(result);
     });
 
-    // Here is saiful Islam code
-    app.get("/blogs", async (req, res) => {
-      const result = await blogsCollection.find().toArray();
+    //rakib01110 branch
+    app.get("/users", async (req, res) => {
+      const user = await usersCollection.find().toArray();
+      res.send(user);
+    });
+    app.post("/users", async (req, res) => {
+      const users = req.body;
+
+      const queary = { email: users.email };
+      const existingEmail = await usersCollection.findOne(queary);
+      console.log("existing User", existingEmail);
+      if (existingEmail) {
+        return res.send({ message: "user allready added" });
+      }
+      const result = await usersCollection.insertOne(users);
       res.send(result);
     });
 
-    app.get("/blogs/:id", async (req, res) => {
-      const id = req.params.id;
-      const result = await blogsCollection.findOne({
-        _id: new ObjectId(id),
-      });
-      res.send(result);
-    });
-
+    
     app.get("/", (req, res) => {
       res.send("TitanArena is runing");
     });
@@ -91,7 +96,9 @@ async function run() {
     // await client.close();
   }
 }
-run().catch(console.dir);
+run().catch((error) => {
+  console.error("Error during server startup:", error);
+});
 
 app.listen(port, (req, res) => {
   console.log("Titans Arena is sitting on port", port);
