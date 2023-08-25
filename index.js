@@ -10,10 +10,9 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@techtitans.gvuoct6.mongodb.net/?retryWrites=true&w=majority`;
 
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version+926
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -29,6 +28,8 @@ async function run() {
     // Send a ping to confirm a successful connection
 
     const allGames = client.db("titanArena").collection("games");
+    const usersCollection = client.db("titanArena").collection("users");
+    const blogsCollection = client.db("titanArena").collection("blogs");
 
     // Nabil branch
     app.get("/games", async (req, res) => {
@@ -48,7 +49,7 @@ async function run() {
     app.get("/searchGames", async (req, res) => {
       // console.log(req.query.search)
       const search = req.query.search;
-      const query = { title: { $regex: search } };
+      const query = { title: { $regex: search, $options: "i" } };
       const result = await allGames.find(query).toArray();
       res.send(result);
     });
@@ -62,7 +63,47 @@ async function run() {
       res.send(result);
     });
 
-    // saiful bhi bra
+    //rakib01110 branch
+    app.get("/users", async (req, res) => {
+      const user = await usersCollection.find().toArray();
+      res.send(user);
+    });
+    app.post("/users", async (req, res) => {
+      const users = req.body;
+
+      const queary = { email: users.email };
+      const existingEmail = await usersCollection.findOne(queary);
+      console.log("existing User", existingEmail);
+      if (existingEmail) {
+        return res.send({ message: "user allready added" });
+      }
+      const result = await usersCollection.insertOne(users);
+      res.send(result);
+    });
+
+    // Here is saiful Islam code
+    // get all the blogs from database
+    app.get("/blogs", async (req, res) => {
+      const result = await blogsCollection.find().toArray();
+      res.send(result);
+    });
+
+    // get a single blog
+    app.get("/blogs/:id", async (req, res) => {
+      const id = req.params.id;
+      const result = await blogsCollection.findOne({
+        _id: new ObjectId(id),
+      });
+      res.send(result);
+    });
+
+    // search blogs api created
+    app.get("/searchblogs", async (req, res) => {
+      const search = req.query.search;
+      const query = { title: { $regex: search, $options: "i" } };
+      const result = await blogsCollection.find(query).toArray();
+      res.send(result);
+    });
 
     app.get("/", (req, res) => {
       res.send("TitanArena is runing");
