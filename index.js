@@ -4,6 +4,7 @@ const cors = require("cors");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+const { games } = require("./NABIL/games");
 const port = process.env.PORT || 5000;
 
 // middleware
@@ -55,8 +56,6 @@ async function run() {
     const usersCollection = client.db("titanArena").collection("users");
     const blogsCollection = client.db("titanArena").collection("blogs");
 
-    // Nabil brach
-
     app.post("/jwt", async (req, res) => {
       const user = req.body;
       const token = jwt.sign(user, process.env.ACCESS_TOKEN, {
@@ -77,29 +76,7 @@ async function run() {
       next();
     };
 
-
-
-    app.get("/games", async (req, res) => {
-      let query = {};
-      if (req.query?.category === "All Games") {
-        const result = await allGames.find().toArray();
-        res.send(result);
-        return;
-      }
-      if (req.query?.category) {
-        query = { category: req.query.category };
-      }
-      const result = await allGames.find(query).toArray();
-      res.send(result);
-    });
-
-    app.get("/searchGames", async (req, res) => {
-      // console.log(req.query.search)
-      const search = req.query.search;
-      const query = { title: { $regex: search, $options: "i" } };
-      const result = await allGames.find(query).toArray();
-      res.send(result);
-    });
+    app.get("/games",  async (req, res) => games(req, res, allGames));
 
     // ------------------------------------------------------------------------------------------------
 
@@ -120,6 +97,7 @@ async function run() {
       const user = await usersCollection.find().toArray();
       res.send(user);
     });
+
     app.post("/users", async (req, res) => {
       const users = req.body;
 
@@ -142,7 +120,7 @@ async function run() {
     });
 
     // get a single blog
-    app.get("/blogs/:id", async (req, res) => {
+    app.get("/blogs/:id",  async (req, res) => {
       const id = req.params.id;
       const result = await blogsCollection.findOne({
         _id: new ObjectId(id),
