@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-// const jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const port = process.env.PORT || 5000;
@@ -9,6 +9,31 @@ const port = process.env.PORT || 5000;
 // middleware
 app.use(cors());
 app.use(express.json());
+
+
+// varify authorization for user
+const varifyJWT = (req, res, next) =>{
+  const authorization = req.headers.authorization;
+
+
+  if(!authorization){
+    return res.status(401).send({error: true, message: 'unauthorization access'})
+  }
+
+  // bearer token
+  const token = authorization.split(' ')[1];
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (error, decode)=>{
+    if (error) {
+      console.log("error");
+      return res.status(401).send({error: true, message: 'unauthorization access'})
+    }
+
+    req.decode = decode;
+    next();
+  })
+}
+
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@techtitans.gvuoct6.mongodb.net/?retryWrites=true&w=majority`;
 
@@ -30,6 +55,24 @@ async function run() {
     const allGames = client.db("titanArena").collection("games");
     const usersCollection = client.db("titanArena").collection("users");
     const blogsCollection = client.db("titanArena").collection("blogs");
+
+// send the jwt access token secret
+    app.post("/jwt", (res, req)=>{
+      const user = res.body;
+      const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '1d'})
+      res.send(token);
+    })
+
+     // Warning: use verifyJWT before using verifyAdmin
+     const verifyAdmin = async (req, res, next) => {
+      const email = req.decoded.email;
+      const query = { email: email }
+      const user = await usersCollection.findOne(query);
+      if (user?.role !== 'admin') {
+        return res.status(403).send({ error: true, message: 'forbidden message' });
+      }
+      next();
+    }
 
     // Nabil brach
     app.get("/games", async (req, res) => {
@@ -104,6 +147,12 @@ async function run() {
       const result = await blogsCollection.find(query).toArray();
       res.send(result);
     });
+
+    app.post("/blog", async(req, res)=>{
+      const blog = req.body;
+      const result = await blogsCollection.insertOne(blog);
+      res.send(result)
+    })
 
     app.get("/", (req, res) => {
       res.send("TitanArena is runing");
