@@ -55,6 +55,7 @@ async function run() {
     const allGames = client.db("titanArena").collection("games");
     const usersCollection = client.db("titanArena").collection("users");
     const blogsCollection = client.db("titanArena").collection("blogs");
+    const newsleterCollection = client.db("titanArena").collection("newsleter");
 
 // send the jwt access token secret
     app.post("/jwt", (res, req)=>{
@@ -151,6 +152,12 @@ async function run() {
     app.post("/blog", async(req, res)=>{
       const blog = req.body;
       const result = await blogsCollection.insertOne(blog);
+      res.send(result)
+    })
+
+    app.post("/newsletter", async(req, res)=>{
+      const email = req.body;
+      const result = await newsleterCollection.insertOne(email);
       res.send(result)
     })
 
