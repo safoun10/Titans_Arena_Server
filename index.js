@@ -6,6 +6,7 @@ require("dotenv").config();
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const { games } = require("./NABIL/games");
 const { searchGames } = require("./NABIL/searchGames");
+const { DeleteUsers } = require("./NABIL/DeleteUsers");
 const port = process.env.PORT || 5000;
 
 // middleware
@@ -80,6 +81,7 @@ async function run() {
     app.get("/games",  async (req, res) => games(req, res, allGames));
 
     app.get("/searchGames", async(req, res) => searchGames(req, res, allGames))
+    app.delete("/users/:id",  async (req, res)=> DeleteUsers(req, res, usersCollection) )
 
     // ------------------------------------------------------------------------------------------------
 
