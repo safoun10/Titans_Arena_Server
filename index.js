@@ -93,7 +93,7 @@ async function run() {
     // --------------------------------------------------------------------------------------------------
 
     //rakib01110 branch
-    app.get("/users", verifyJWT,verifyAdmin, async (req, res) => {
+    app.get("/users", async (req, res) => {
       const user = await usersCollection.find().toArray();
       res.send(user);
     });
