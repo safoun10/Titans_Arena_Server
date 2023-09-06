@@ -99,7 +99,7 @@ async function run() {
       res.send(result);
     });
 
-    app.patch("/users/:id", async (req, res) => {
+    app.patch("/users/:id",  async (req, res) => {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
       const updateDoc = {
@@ -114,10 +114,11 @@ async function run() {
     // --------------------------------------------------------------------------------------------------
 
     //rakib01110 branch
-    app.get("/users", async (req, res) => {
+    app.get("/users", verifyJWT,verifyAdmin, async (req, res) => {
       const user = await usersCollection.find().toArray();
       res.send(user);
     });
+
 
     app.post("/users", async (req, res) => {
       const users = req.body;
