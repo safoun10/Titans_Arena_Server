@@ -5,6 +5,10 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const { games } = require("./NABIL/games");
+const { searchGames } = require("./NABIL/searchGames");
+const { DeleteUsers } = require("./NABIL/DeleteUsers");
+const { MakeAdmin } = require("./NABIL/MakeAdmin");
+const { FindAdmin } = require("./NABIL/FindAdmin");
 const port = process.env.PORT || 5000;
 
 // middleware
@@ -32,8 +36,6 @@ const verifyJWT = (req, res, next) => {
     next();
   });
 };
-
-
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@techtitans.gvuoct6.mongodb.net/?retryWrites=true&w=majority`;
 
@@ -76,12 +78,19 @@ async function run() {
       next();
     };
 
-    app.get("/games",  async (req, res) => games(req, res, allGames));
+    app.get("/games", async (req, res) => games(req, res, allGames));
+
+    app.get("/searchGames", async(req, res) => searchGames(req, res, allGames))
+    app.delete("/users/:id",  async (req, res)=> DeleteUsers(req, res, usersCollection))
+
+    app.patch("/users/admin/:id", verifyJWT,   async (req, res) => MakeAdmin(req, res, usersCollection))
+
+    app.get("/users/admin/:email", verifyJWT,  async (req, res) => FindAdmin(req, res, usersCollection))
 
     // ------------------------------------------------------------------------------------------------
 
     // AlaminHasan Branch
-    
+
     app.get("/games/:id", async (req, res) => {
       const id = req.params.id;
       const result = await allGames.findOne({
@@ -90,6 +99,18 @@ async function run() {
       res.send(result);
     });
 
+    app.patch("/users/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const updateDoc = {
+        $set: {
+          role: "admin",
+        },
+      };
+
+      const result = await usersCollection.updateOne(filter, updateDoc);
+      res.send(result);
+    });
     // --------------------------------------------------------------------------------------------------
 
     //rakib01110 branch
@@ -120,7 +141,7 @@ async function run() {
     });
 
     // get a single blog
-    app.get("/blogs/:id",  async (req, res) => {
+    app.get("/blogs/:id", async (req, res) => {
       const id = req.params.id;
       const result = await blogsCollection.findOne({
         _id: new ObjectId(id),
