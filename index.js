@@ -37,6 +37,8 @@ const verifyJWT = (req, res, next) => {
   });
 };
 
+
+
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@techtitans.gvuoct6.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version+926
@@ -78,7 +80,7 @@ async function run() {
       next();
     };
 
-    app.get("/games", async (req, res) => games(req, res, allGames));
+    app.get("/games",  async (req, res) => games(req, res, allGames));
 
     app.get("/searchGames", async(req, res) => searchGames(req, res, allGames))
     app.delete("/users/:id",  async (req, res)=> DeleteUsers(req, res, usersCollection))
@@ -89,8 +91,7 @@ async function run() {
 
     // ------------------------------------------------------------------------------------------------
 
-    // AlaminHasan Branch
-
+    
     app.get("/games/:id", async (req, res) => {
       const id = req.params.id;
       const result = await allGames.findOne({
@@ -99,22 +100,10 @@ async function run() {
       res.send(result);
     });
 
-    app.patch("/users/:id", async (req, res) => {
-      const id = req.params.id;
-      const filter = { _id: new ObjectId(id) };
-      const updateDoc = {
-        $set: {
-          role: "admin",
-        },
-      };
-
-      const result = await usersCollection.updateOne(filter, updateDoc);
-      res.send(result);
-    });
     // --------------------------------------------------------------------------------------------------
 
     //rakib01110 branch
-    app.get("/users", async (req, res) => {
+    app.get("/users", verifyJWT, verifyAdmin, async (req, res) => {
       const user = await usersCollection.find().toArray();
       res.send(user);
     });
@@ -141,7 +130,7 @@ async function run() {
     });
 
     // get a single blog
-    app.get("/blogs/:id", async (req, res) => {
+    app.get("/blogs/:id",  async (req, res) => {
       const id = req.params.id;
       const result = await blogsCollection.findOne({
         _id: new ObjectId(id),
