@@ -1,6 +1,5 @@
 const FindAdmin = async (req, res, usersCollection) =>{
     const email = req.params.email;
-    console.log(email)
 
     if (req.decoded.email !== email) {
       return res.send({ admin: false });
