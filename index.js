@@ -9,6 +9,7 @@ const { searchGames } = require("./NABIL/searchGames");
 const { DeleteUsers } = require("./NABIL/DeleteUsers");
 const { MakeAdmin } = require("./NABIL/MakeAdmin");
 const { FindAdmin } = require("./NABIL/FindAdmin");
+const {  UserInfo } = require("./NABIL/UserInfo");
 const port = process.env.PORT || 5000;
 
 // middleware
@@ -86,6 +87,7 @@ async function run() {
     app.patch("/users/admin/:id", verifyJWT,   async (req, res) => MakeAdmin(req, res, usersCollection))
 
     app.get("/users/admin/:email", verifyJWT,  async (req, res) => FindAdmin(req, res, usersCollection))
+    app.get("/userInfo/:email",  async(req, res)=> UserInfo(req, res, usersCollection))
 
     // ------------------------------------------------------------------------------------------------
 
