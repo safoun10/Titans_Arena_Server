@@ -12,13 +12,7 @@ const { FindAdmin } = require("./NABIL/FindAdmin");
 const port = process.env.PORT || 5000;
 
 // middleware
-const corsOptions = {
-  origin: ['http://localhost:5173/', 'https://titans-arena-server.vercel.app/'], // Replace with your frontend's URL
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-  credentials: true, // Enable cookies and authorization headers
-};
-
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
 
 // Verify JWT
@@ -105,7 +99,7 @@ async function run() {
       res.send(result);
     });
 
-    app.patch("/users/:id", async (req, res) => {
+    app.patch("/users/:id",  async (req, res) => {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
       const updateDoc = {
@@ -120,10 +114,11 @@ async function run() {
     // --------------------------------------------------------------------------------------------------
 
     //rakib01110 branch
-    app.get("/users" , verifyJWT, verifyAdmin, async (req, res) => {
+    app.get("/users", verifyJWT,verifyAdmin, async (req, res) => {
       const user = await usersCollection.find().toArray();
       res.send(user);
     });
+
 
     app.post("/users", async (req, res) => {
       const users = req.body;
