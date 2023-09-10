@@ -1,0 +1,73 @@
+[
+    {
+      "user_email": "user1@example.com",
+      "user_name": "John Doe",
+      "user_img": "https://example.com/user1.jpg",
+      "star_rating": 5,
+      "review_text": "This product is amazing! It exceeded my expectations."
+    },
+    {
+      "user_email": "user2@example.com",
+      "user_name": "Jane Smith",
+      "user_img": "https://example.com/user2.jpg",
+      "star_rating": 4,
+      "review_text": "Good product overall, but there is room for improvement."
+    },
+    {
+      "user_email": "user3@example.com",
+      "user_name": "Robert Johnson",
+      "user_img": "https://example.com/user3.jpg",
+      "star_rating": 5,
+      "review_text": "I love it! The quality is superb."
+    },
+    {
+      "user_email": "user4@example.com",
+      "user_name": "Emily Brown",
+      "user_img": "https://example.com/user4.jpg",
+      "star_rating": 3,
+      "review_text": "Decent product, but it could be priced better."
+    },
+    {
+      "user_email": "user5@example.com",
+      "user_name": "David Wilson",
+      "user_img": "https://example.com/user5.jpg",
+      "star_rating": 4,
+      "review_text": "I'm satisfied with my purchase. It works well."
+    },
+    {
+      "user_email": "user6@example.com",
+      "user_name": "Sarah Lee",
+      "user_img": "https://example.com/user6.jpg",
+      "star_rating": 2,
+      "review_text": "Not impressed. It didn't meet my expectations."
+    },
+    {
+      "user_email": "user7@example.com",
+      "user_name": "Michael Davis",
+      "user_img": "https://example.com/user7.jpg",
+      "star_rating": 4,
+      "review_text": "Great value for the price. I recommend it."
+    },
+    {
+      "user_email": "user8@example.com",
+      "user_name": "Lisa Turner",
+      "user_img": "https://example.com/user8.jpg",
+      "star_rating": 5,
+      "review_text": "Fantastic product! I can't live without it."
+    },
+    {
+      "user_email": "user9@example.com",
+      "user_name": "William Clark",
+      "user_img": "https://example.com/user9.jpg",
+      "star_rating": 3,
+      "review_text": "It's okay, but I expected better performance."
+    },
+    {
+      "user_email": "user10@example.com",
+      "user_name": "Megan White",
+      "user_img": "https://example.com/user10.jpg",
+      "star_rating": 4,
+      "review_text": "Solid product. I'm happy with my purchase."
+    }
+  ]
+  
