@@ -10,6 +10,8 @@ const { DeleteUsers } = require("./NABIL/DeleteUsers");
 const { MakeAdmin } = require("./NABIL/MakeAdmin");
 const { FindAdmin } = require("./NABIL/FindAdmin");
 const {  UserInfo } = require("./NABIL/UserInfo");
+const { Comments } = require("./NABIL/Comments");
+const { GetComments } = require("./NABIL/GetComments");
 const port = process.env.PORT || 5000;
 
 // middleware
@@ -58,6 +60,8 @@ async function run() {
     const allGames = client.db("titanArena").collection("games");
     const usersCollection = client.db("titanArena").collection("users");
     const blogsCollection = client.db("titanArena").collection("blogs");
+    const commentsCollection = client.db("titanArena").collection("comments")
+    const reviewsCollection = client.db("titanArena").collection("reviews")
 
     app.post("/jwt", async (req, res) => {
       const user = req.body;
@@ -88,6 +92,8 @@ async function run() {
 
     app.get("/users/admin/:email", verifyJWT,  async (req, res) => FindAdmin(req, res, usersCollection))
     app.get("/userInfo/:email",  async(req, res)=> UserInfo(req, res, usersCollection))
+    app.get("/comments", async (req, res)=> GetComments(req, res, commentsCollection))
+    app.post("/comments", async(req, res)=> Comments(req, res, commentsCollection))
 
     // ------------------------------------------------------------------------------------------------
 
