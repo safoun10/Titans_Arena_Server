@@ -142,6 +142,11 @@ async function run() {
     });
 
     // search blogs api created
+    app.post("/blogs", async(req, res)=>{
+      const result = await blogsCollection.find().toArray();
+      res.send(result)
+    })
+
     app.get("/searchblogs", async (req, res) => {
       const search = req.query.search;
       const query = { title: { $regex: search, $options: "i" } };
