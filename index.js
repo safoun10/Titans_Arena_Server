@@ -9,11 +9,14 @@ const { searchGames } = require("./NABIL/searchGames");
 const { DeleteUsers } = require("./NABIL/DeleteUsers");
 const { MakeAdmin } = require("./NABIL/MakeAdmin");
 const { FindAdmin } = require("./NABIL/FindAdmin");
-const {  UserInfo } = require("./NABIL/UserInfo");
+const { UserInfo } = require("./NABIL/UserInfo");
+const { gameDetails } = require("./AlaminHasan/gameDetails");
+const { editProfile } = require("./AlaminHasan/editProfile");
+const { profile } = require("./AlaminHasan/profile");
 const port = process.env.PORT || 5000;
 
 // middleware
-app.use(cors())
+app.use(cors());
 app.use(express.json());
 
 // Verify JWT
@@ -80,39 +83,34 @@ async function run() {
     };
 
     app.get("/games", async (req, res) => games(req, res, allGames));
-
-    app.get("/searchGames", async(req, res) => searchGames(req, res, allGames))
-    app.delete("/users/:id",  async (req, res)=> DeleteUsers(req, res, usersCollection))
-
-    app.patch("/users/admin/:id", verifyJWT,   async (req, res) => MakeAdmin(req, res, usersCollection))
-
-    app.get("/users/admin/:email", verifyJWT,  async (req, res) => FindAdmin(req, res, usersCollection))
-    app.get("/userInfo/:email",  async(req, res)=> UserInfo(req, res, usersCollection))
+    app.get("/searchGames", async (req, res) =>
+      searchGames(req, res, allGames)
+    );
+    app.delete("/users/:id", async (req, res) =>
+      DeleteUsers(req, res, usersCollection)
+    );
+    app.patch("/users/admin/:id", verifyJWT, async (req, res) =>
+      MakeAdmin(req, res, usersCollection)
+    );
+    app.get("/users/admin/:email", verifyJWT, async (req, res) =>
+      FindAdmin(req, res, usersCollection)
+    );
+    app.get("/userInfo/:email", async (req, res) =>
+      UserInfo(req, res, usersCollection)
+    );
 
     // ------------------------------------------------------------------------------------------------
 
     // AlaminHasan Branch
 
-    app.get("/games/:id", async (req, res) => {
-      const id = req.params.id;
-      const result = await allGames.findOne({
-        _id: new ObjectId(id),
-      });
-      res.send(result);
+    app.get("/games/:id", async (req, res) => gameDetails(req, res, allGames));
+    app.get("/userProfile/:id", async (req, res) => {
+      profile(req, res, usersCollection);
     });
 
-    app.patch("/users/:id",  async (req, res) => {
-      const id = req.params.id;
-      const filter = { _id: new ObjectId(id) };
-      const updateDoc = {
-        $set: {
-          role: "admin",
-        },
-      };
-
-      const result = await usersCollection.updateOne(filter, updateDoc);
-      res.send(result);
-    });
+    app.patch("/usersInfo/:email", async (req, res) =>
+      editProfile(req, res, usersCollection)
+    );
     // --------------------------------------------------------------------------------------------------
 
     //rakib01110 branch
@@ -120,7 +118,6 @@ async function run() {
       const user = await usersCollection.find().toArray();
       res.send(user);
     });
-
 
     app.post("/users", async (req, res) => {
       const users = req.body;
