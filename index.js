@@ -12,6 +12,8 @@ const { FindAdmin } = require("./NABIL/FindAdmin");
 const {  UserInfo } = require("./NABIL/UserInfo");
 const { Comments } = require("./NABIL/Comments");
 const { GetComments } = require("./NABIL/GetComments");
+const { Reviews } = require("./NABIL/Reviews");
+const { GetReviews } = require("./NABIL/GetReviews");
 const port = process.env.PORT || 5000;
 
 // middleware
@@ -94,6 +96,8 @@ async function run() {
     app.get("/userInfo/:email",  async(req, res)=> UserInfo(req, res, usersCollection))
     app.get("/comments", async (req, res)=> GetComments(req, res, commentsCollection))
     app.post("/comments", async(req, res)=> Comments(req, res, commentsCollection))
+    app.get("/reviews", async (req, res)=> GetReviews(req, res, reviewsCollection))
+    app.post("/reviews", async(req, res)=> Reviews(req, res, reviewsCollection))
 
     // ------------------------------------------------------------------------------------------------
 
