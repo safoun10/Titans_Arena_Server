@@ -5,7 +5,7 @@ const cors = require("cors");
 require("dotenv").config();
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const port = process.env.PORT || 5000;
-
+const { FixeredMatchDB } = require("./Rakib/FixeredMatchDB")
 // middleware
 app.use(cors());
 app.use(express.json());
@@ -31,6 +31,9 @@ async function run() {
     const usersCollection = client.db("titanArena").collection("users");
     const blogsCollection = client.db("titanArena").collection("blogs");
 
+    // reakib esp
+    const espMatchfixeredCollection = client.db("titanArena").collection("matchFixeredDb");
+
     // Nabil brach
     app.get("/games", async (req, res) => {
       let query = {};
@@ -55,7 +58,7 @@ async function run() {
     });
 
     // AlaminHasan Branch
-    
+
     app.get("/games/:id", async (req, res) => {
       const id = req.params.id;
       const result = await allGames.findOne({
@@ -69,6 +72,7 @@ async function run() {
       const user = await usersCollection.find().toArray();
       res.send(user);
     });
+
     app.post("/users", async (req, res) => {
       const users = req.body;
 
@@ -81,6 +85,20 @@ async function run() {
       const result = await usersCollection.insertOne(users);
       res.send(result);
     });
+
+
+    app.get("/espMatchFixered", async (req, res) => {
+      const result = await espMatchfixeredCollection.find().toArray()
+      res.send(result)
+
+    });
+
+    app.get("/espMatchFixered/:id", async (req, res) => FixeredMatchDB(
+      req, res, espMatchfixeredCollection
+    ))
+
+
+
 
     // Here is saiful Islam code
     // get all the blogs from database
