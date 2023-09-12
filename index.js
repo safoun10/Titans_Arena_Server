@@ -13,6 +13,11 @@ const { UserInfo } = require("./NABIL/UserInfo");
 const { gameDetails } = require("./AlaminHasan/gameDetails");
 const { editProfile } = require("./AlaminHasan/editProfile");
 const { profile } = require("./AlaminHasan/profile");
+
+const { Comments } = require("./NABIL/Comments");
+const { GetComments } = require("./NABIL/GetComments");
+const { Reviews } = require("./NABIL/Reviews");
+const { GetReviews } = require("./NABIL/GetReviews");
 const port = process.env.PORT || 5000;
 const { FixeredMatchDB } = require("./Rakib/FixeredMatchDB");
 // middleware
@@ -61,6 +66,8 @@ async function run() {
     const allGames = client.db("titanArena").collection("games");
     const usersCollection = client.db("titanArena").collection("users");
     const blogsCollection = client.db("titanArena").collection("blogs");
+    const commentsCollection = client.db("titanArena").collection("comments");
+    const reviewsCollection = client.db("titanArena").collection("reviews");
     const espMatchfixeredCollection = client
       .db("titanArena")
       .collection("matchFixeredDb");
@@ -86,20 +93,35 @@ async function run() {
     };
 
     app.get("/games", async (req, res) => games(req, res, allGames));
+
     app.get("/searchGames", async (req, res) =>
       searchGames(req, res, allGames)
     );
     app.delete("/users/:id", async (req, res) =>
       DeleteUsers(req, res, usersCollection)
     );
+
     app.patch("/users/admin/:id", verifyJWT, async (req, res) =>
       MakeAdmin(req, res, usersCollection)
     );
+
     app.get("/users/admin/:email", verifyJWT, async (req, res) =>
       FindAdmin(req, res, usersCollection)
     );
     app.get("/userInfo/:email", async (req, res) =>
       UserInfo(req, res, usersCollection)
+    );
+    app.get("/comments", async (req, res) =>
+      GetComments(req, res, commentsCollection)
+    );
+    app.post("/comments", async (req, res) =>
+      Comments(req, res, commentsCollection)
+    );
+    app.get("/reviews", async (req, res) =>
+      GetReviews(req, res, reviewsCollection)
+    );
+    app.post("/reviews", async (req, res) =>
+      Reviews(req, res, reviewsCollection)
     );
 
     // ------------------------------------------------------------------------------------------------
