@@ -9,6 +9,7 @@ const { searchGames } = require("./NABIL/searchGames");
 const { DeleteUsers } = require("./NABIL/DeleteUsers");
 const { MakeAdmin } = require("./NABIL/MakeAdmin");
 const { FindAdmin } = require("./NABIL/FindAdmin");
+const {flipCardGames} = require("./RAHI/flipCardGames")
 const port = process.env.PORT || 5000;
 
 // middleware
@@ -57,6 +58,7 @@ async function run() {
     const allGames = client.db("titanArena").collection("games");
     const usersCollection = client.db("titanArena").collection("users");
     const blogsCollection = client.db("titanArena").collection("blogs");
+    const flipGamesCollection = client.db("titanArena").collection("flipCardGames");
 
     app.post("/jwt", async (req, res) => {
       const user = req.body;
@@ -80,12 +82,20 @@ async function run() {
 
     app.get("/games", async (req, res) => games(req, res, allGames));
 
-    app.get("/searchGames", async(req, res) => searchGames(req, res, allGames))
-    app.delete("/users/:id",  async (req, res)=> DeleteUsers(req, res, usersCollection))
+    app.get("/searchGames", async (req, res) =>
+      searchGames(req, res, allGames)
+    );
+    app.delete("/users/:id", async (req, res) =>
+      DeleteUsers(req, res, usersCollection)
+    );
 
-    app.patch("/users/admin/:id", verifyJWT,   async (req, res) => MakeAdmin(req, res, usersCollection))
+    app.patch("/users/admin/:id", verifyJWT, async (req, res) =>
+      MakeAdmin(req, res, usersCollection)
+    );
 
-    app.get("/users/admin/:email", verifyJWT,  async (req, res) => FindAdmin(req, res, usersCollection))
+    app.get("/users/admin/:email", verifyJWT, async (req, res) =>
+      FindAdmin(req, res, usersCollection)
+    );
 
     // ------------------------------------------------------------------------------------------------
 
@@ -99,7 +109,7 @@ async function run() {
       res.send(result);
     });
 
-    app.patch("/users/:id",  async (req, res) => {
+    app.patch("/users/:id", async (req, res) => {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
       const updateDoc = {
@@ -114,11 +124,10 @@ async function run() {
     // --------------------------------------------------------------------------------------------------
 
     //rakib01110 branch
-    app.get("/users", verifyJWT,verifyAdmin, async (req, res) => {
+    app.get("/users", verifyJWT, verifyAdmin, async (req, res) => {
       const user = await usersCollection.find().toArray();
       res.send(user);
     });
-
 
     app.post("/users", async (req, res) => {
       const users = req.body;
@@ -157,6 +166,13 @@ async function run() {
       const result = await blogsCollection.find(query).toArray();
       res.send(result);
     });
+    // --------------------------------------------------------------------------------------------------
+    // the codes of Rahi
+
+    app.get("/flip-games", async (req, res) => {
+      flipCardGames(req, res, flipGamesCollection)
+    });
+
     // --------------------------------------------------------------------------------------------------
 
     app.get("/", (req, res) => {
