@@ -9,8 +9,20 @@ const { searchGames } = require("./NABIL/searchGames");
 const { DeleteUsers } = require("./NABIL/DeleteUsers");
 const { MakeAdmin } = require("./NABIL/MakeAdmin");
 const { FindAdmin } = require("./NABIL/FindAdmin");
-const port = process.env.PORT || 5000;
+const { UserInfo } = require("./NABIL/UserInfo");
+const { gameDetails } = require("./AlaminHasan/gameDetails");
+const { editProfile } = require("./AlaminHasan/editProfile");
+const { profile } = require("./AlaminHasan/profile");
+const {flipCardGames} = require("./RAHI/flipCardGames")
 
+
+const { Comments } = require("./NABIL/Comments");
+const { GetComments } = require("./NABIL/GetComments");
+const { Reviews } = require("./NABIL/Reviews");
+const { GetReviews } = require("./NABIL/GetReviews");
+const port = process.env.PORT || 5000;
+const { FixeredMatchDB } = require("./Rakib/FixeredMatchDB");
+const { myComments } = require("./AlaminHasan/myComments");
 // middleware
 app.use(cors());
 app.use(express.json());
@@ -57,6 +69,12 @@ async function run() {
     const allGames = client.db("titanArena").collection("games");
     const usersCollection = client.db("titanArena").collection("users");
     const blogsCollection = client.db("titanArena").collection("blogs");
+    const commentsCollection = client.db("titanArena").collection("comments");
+    const reviewsCollection = client.db("titanArena").collection("reviews");
+    const espMatchfixeredCollection = client
+      .db("titanArena")
+      .collection("matchFixeredDb");
+    const flipGamesCollection = client.db("titanArena").collection("flipCardGames");
 
     app.post("/jwt", async (req, res) => {
       const user = req.body;
@@ -80,45 +98,55 @@ async function run() {
 
     app.get("/games", async (req, res) => games(req, res, allGames));
 
-    app.get("/searchGames", async(req, res) => searchGames(req, res, allGames))
-    app.delete("/users/:id",  async (req, res)=> DeleteUsers(req, res, usersCollection))
+    app.get("/searchGames", async (req, res) =>
+      searchGames(req, res, allGames)
+    );
+    app.delete("/users/:id", async (req, res) =>
+      DeleteUsers(req, res, usersCollection)
+    );
 
-    app.patch("/users/admin/:id", verifyJWT,   async (req, res) => MakeAdmin(req, res, usersCollection))
+    app.patch("/users/admin/:id", verifyJWT, async (req, res) =>
+      MakeAdmin(req, res, usersCollection)
+    );
 
-    app.get("/users/admin/:email", verifyJWT,  async (req, res) => FindAdmin(req, res, usersCollection))
-
-    // ------------------------------------------------------------------------------------------------
+    app.get("/users/admin/:email", verifyJWT, async (req, res) =>
+      FindAdmin(req, res, usersCollection)
+    );
+    app.get("/userInfo/:email", async (req, res) =>
+      UserInfo(req, res, usersCollection)
+    );
+    app.get("/comments", async (req, res) =>
+      GetComments(req, res, commentsCollection)
+    );
+    app.post("/comments", async (req, res) =>
+      Comments(req, res, commentsCollection)
+    );
+    app.get("/reviews", async (req, res) =>
+      GetReviews(req, res, reviewsCollection)
+    );
+    app.post("/reviews", async (req, res) =>
+      Reviews(req, res, reviewsCollection)
+    );
 
     // AlaminHasan Branch
 
-    app.get("/games/:id", async (req, res) => {
-      const id = req.params.id;
-      const result = await allGames.findOne({
-        _id: new ObjectId(id),
-      });
-      res.send(result);
+    app.get("/games/:id", async (req, res) => gameDetails(req, res, allGames));
+    app.get("/userProfile/:id", async (req, res) => {
+      profile(req, res, usersCollection);
     });
 
-    app.patch("/users/:id",  async (req, res) => {
-      const id = req.params.id;
-      const filter = { _id: new ObjectId(id) };
-      const updateDoc = {
-        $set: {
-          role: "admin",
-        },
-      };
-
-      const result = await usersCollection.updateOne(filter, updateDoc);
-      res.send(result);
+    app.patch("/usersInfo/:email", async (req, res) =>
+      editProfile(req, res, usersCollection)
+    );
+    app.get("/myComments/:user_email", async (req, res) => {
+      myComments(req, res, commentsCollection);
     });
-    // --------------------------------------------------------------------------------------------------
 
-    //rakib01110 branch
-    app.get("/users", verifyJWT,verifyAdmin, async (req, res) => {
+    // Rakib01110 branch
+    app.get("/users", verifyJWT, verifyAdmin, async (req, res) => {
       const user = await usersCollection.find().toArray();
       res.send(user);
     });
-
 
     app.post("/users", async (req, res) => {
       const users = req.body;
@@ -133,6 +161,15 @@ async function run() {
       res.send(result);
     });
     // --------------------------------------------------------------------------------------------------
+
+    app.get("/espMatchFixered", async (req, res) => {
+      const result = await espMatchfixeredCollection.find().toArray();
+      res.send(result);
+    });
+
+    app.get("/espMatchFixered/:id", async (req, res) =>
+      FixeredMatchDB(req, res, espMatchfixeredCollection)
+    );
 
     // Here is saiful Islam code
     // get all the blogs from database
@@ -157,6 +194,13 @@ async function run() {
       const result = await blogsCollection.find(query).toArray();
       res.send(result);
     });
+    // --------------------------------------------------------------------------------------------------
+    // the codes of Rahi
+
+    app.get("/flip-games", async (req, res) => {
+      flipCardGames(req, res, flipGamesCollection)
+    });
+
     // --------------------------------------------------------------------------------------------------
 
     app.get("/", (req, res) => {
