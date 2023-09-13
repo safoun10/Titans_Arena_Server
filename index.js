@@ -13,6 +13,8 @@ const { UserInfo } = require("./NABIL/UserInfo");
 const { gameDetails } = require("./AlaminHasan/gameDetails");
 const { editProfile } = require("./AlaminHasan/editProfile");
 const { profile } = require("./AlaminHasan/profile");
+const {flipCardGames} = require("./RAHI/flipCardGames")
+
 
 const { Comments } = require("./NABIL/Comments");
 const { GetComments } = require("./NABIL/GetComments");
@@ -72,6 +74,7 @@ async function run() {
     const espMatchfixeredCollection = client
       .db("titanArena")
       .collection("matchFixeredDb");
+    const flipGamesCollection = client.db("titanArena").collection("flipCardGames");
 
     app.post("/jwt", async (req, res) => {
       const user = req.body;
@@ -191,6 +194,13 @@ async function run() {
       const result = await blogsCollection.find(query).toArray();
       res.send(result);
     });
+    // --------------------------------------------------------------------------------------------------
+    // the codes of Rahi
+
+    app.get("/flip-games", async (req, res) => {
+      flipCardGames(req, res, flipGamesCollection)
+    });
+
     // --------------------------------------------------------------------------------------------------
 
     app.get("/", (req, res) => {
