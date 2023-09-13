@@ -125,8 +125,6 @@ async function run() {
       Reviews(req, res, reviewsCollection)
     );
 
-    // ------------------------------------------------------------------------------------------------
-
     // AlaminHasan Branch
 
     app.get("/games/:id", async (req, res) => gameDetails(req, res, allGames));
@@ -140,9 +138,8 @@ async function run() {
     app.get("/myComments/:user_email", async (req, res) => {
       myComments(req, res, commentsCollection);
     });
-    // --------------------------------------------------------------------------------------------------
 
-    //rakib01110 branch
+    // rakib01110 branch
     app.get("/users", verifyJWT, verifyAdmin, async (req, res) => {
       const user = await usersCollection.find().toArray();
       res.send(user);
