@@ -20,6 +20,7 @@ const { Reviews } = require("./NABIL/Reviews");
 const { GetReviews } = require("./NABIL/GetReviews");
 const port = process.env.PORT || 5000;
 const { FixeredMatchDB } = require("./Rakib/FixeredMatchDB");
+const { myComments } = require("./AlaminHasan/myComments");
 // middleware
 app.use(cors());
 app.use(express.json());
@@ -136,6 +137,9 @@ async function run() {
     app.patch("/usersInfo/:email", async (req, res) =>
       editProfile(req, res, usersCollection)
     );
+    app.get("/myComments/:user_email", async (req, res) => {
+      myComments(req, res, commentsCollection);
+    });
     // --------------------------------------------------------------------------------------------------
 
     //rakib01110 branch
