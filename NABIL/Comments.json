@@ -1,0 +1,81 @@
+[
+    {
+      "user_email": "user1@example.com",
+      "user_name": "John Doe",
+      "user_img": "https://example.com/user1.jpg",
+      "comment_text": "Great post! Thanks for sharing."
+    },
+    {
+      "user_email": "user2@example.com",
+      "user_name": "Jane Smith",
+      "user_img": "https://example.com/user2.jpg",
+      "comment_text": "I have a question about this topic. Can you provide more details?"
+    },
+    {
+      "user_email": "user3@example.com",
+      "user_name": "Robert Johnson",
+      "user_img": "https://example.com/user3.jpg",
+      "comment_text": "I completely agree with your insights. Well done!"
+    },
+    {
+      "user_email": "user1@example.com",
+      "user_name": "John Doe",
+      "user_img": "https://example.com/user1.jpg",
+      "comment_text": "Great post! Thanks for sharing."
+    },
+    {
+      "user_email": "user2@example.com",
+      "user_name": "Jane Smith",
+      "user_img": "https://example.com/user2.jpg",
+      "comment_text": "I have a question about this topic. Can you provide more details?"
+    },
+    {
+      "user_email": "user3@example.com",
+      "user_name": "Robert Johnson",
+      "user_img": "https://example.com/user3.jpg",
+      "comment_text": "I completely agree with your insights. Well done!"
+    },
+    {
+      "user_email": "user4@example.com",
+      "user_name": "Emily Brown",
+      "user_img": "https://example.com/user4.jpg",
+      "comment_text": "This is very informative. Thank you!"
+    },
+    {
+      "user_email": "user5@example.com",
+      "user_name": "David Wilson",
+      "user_img": "https://example.com/user5.jpg",
+      "comment_text": "I love the way you explain complex concepts."
+    },
+    {
+      "user_email": "user6@example.com",
+      "user_name": "Sarah Lee",
+      "user_img": "https://example.com/user6.jpg",
+      "comment_text": "I have a different perspective on this, but it's an interesting read."
+    },
+    {
+      "user_email": "user7@example.com",
+      "user_name": "Michael Davis",
+      "user_img": "https://example.com/user7.jpg",
+      "comment_text": "Could you recommend further reading on this topic?"
+    },
+    {
+      "user_email": "user8@example.com",
+      "user_name": "Lisa Turner",
+      "user_img": "https://example.com/user8.jpg",
+      "comment_text": "I shared this with my colleagues. They loved it too!"
+    },
+    {
+      "user_email": "user9@example.com",
+      "user_name": "William Clark",
+      "user_img": "https://example.com/user9.jpg",
+      "comment_text": "Your insights are always on point. Keep it up!"
+    },
+    {
+      "user_email": "user10@example.com",
+      "user_name": "Megan White",
+      "user_img": "https://example.com/user10.jpg",
+      "comment_text": "I'm looking forward to more content from you."
+    }
+  ]
+  
