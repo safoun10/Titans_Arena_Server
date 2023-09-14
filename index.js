@@ -13,8 +13,7 @@ const { UserInfo } = require("./NABIL/UserInfo");
 const { gameDetails } = require("./AlaminHasan/gameDetails");
 const { editProfile } = require("./AlaminHasan/editProfile");
 const { profile } = require("./AlaminHasan/profile");
-const {flipCardGames} = require("./RAHI/flipCardGames")
-
+const { flipCardGames } = require("./RAHI/flipCardGames");
 
 const { Comments } = require("./NABIL/Comments");
 const { GetComments } = require("./NABIL/GetComments");
@@ -23,6 +22,7 @@ const { GetReviews } = require("./NABIL/GetReviews");
 const port = process.env.PORT || 5000;
 const { FixeredMatchDB } = require("./Rakib/FixeredMatchDB");
 const { myComments } = require("./AlaminHasan/myComments");
+const { singleGameComments } = require("./AlaminHasan/singleGameComments");
 // middleware
 app.use(cors());
 app.use(express.json());
@@ -74,7 +74,9 @@ async function run() {
     const espMatchfixeredCollection = client
       .db("titanArena")
       .collection("matchFixeredDb");
-    const flipGamesCollection = client.db("titanArena").collection("flipCardGames");
+    const flipGamesCollection = client
+      .db("titanArena")
+      .collection("flipCardGames");
 
     app.post("/jwt", async (req, res) => {
       const user = req.body;
@@ -137,9 +139,12 @@ async function run() {
 
     app.patch("/usersInfo/:email", async (req, res) =>
       editProfile(req, res, usersCollection)
-    );
+    );                
     app.get("/myComments/:user_email", async (req, res) => {
       myComments(req, res, commentsCollection);
+    });
+    app.get("/singleGameComments/:game_id", async (req, res) => {
+      singleGameComments(req, res, commentsCollection);
     });
 
     // Rakib01110 branch
@@ -198,7 +203,7 @@ async function run() {
     // the codes of Rahi
 
     app.get("/flip-games", async (req, res) => {
-      flipCardGames(req, res, flipGamesCollection)
+      flipCardGames(req, res, flipGamesCollection);
     });
 
     // --------------------------------------------------------------------------------------------------
