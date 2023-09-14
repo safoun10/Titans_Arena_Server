@@ -73,6 +73,7 @@ async function run() {
     const reviewsCollection = client.db("titanArena").collection("reviews");
     const socialLinksCollection = client.db("titanArena").collection("socialLinks");
     const teamMembersCollection = client.db("titanArena").collection("teamMembers");
+    const homeReviewCollection = client.db("titanArena").collection("HomeReview");
 
     const espMatchfixeredCollection = client
       .db("titanArena")
@@ -215,6 +216,11 @@ async function run() {
 
     app.get("/team-members", async (req, res) => {
       flipCardGames(req, res, teamMembersCollection)
+    });
+
+
+    app.get("/home-review", async (req, res) => {
+      flipCardGames(req, res, homeReviewCollection)
     });
 
     // --------------------------------------------------------------------------------------------------
