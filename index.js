@@ -14,7 +14,6 @@ const { gameDetails } = require("./AlaminHasan/gameDetails");
 const { editProfile } = require("./AlaminHasan/editProfile");
 const { profile } = require("./AlaminHasan/profile");
 const { flipCardGames } = require("./RAHI/flipCardGames");
-
 const { Comments } = require("./NABIL/Comments");
 const { GetComments } = require("./NABIL/GetComments");
 const { Reviews } = require("./NABIL/Reviews");
@@ -23,6 +22,7 @@ const port = process.env.PORT || 5000;
 const { FixeredMatchDB } = require("./Rakib/FixeredMatchDB");
 const { myComments } = require("./AlaminHasan/myComments");
 const { singleGameComments } = require("./AlaminHasan/singleGameComments");
+const { singleReviews } = require("./AlaminHasan/singleReviews");
 // middleware
 app.use(cors());
 app.use(express.json());
@@ -143,13 +143,16 @@ async function run() {
 
     app.patch("/usersInfo/:email", async (req, res) =>
       editProfile(req, res, usersCollection)
-    );                
+    );
     app.get("/myComments/:user_email", async (req, res) => {
       myComments(req, res, commentsCollection);
     });
     app.get("/singleGameComments/:game_id", async (req, res) => {
       singleGameComments(req, res, commentsCollection);
     });
+    app.get("/reviews/:game_id", async (req, res) =>
+      singleReviews(req, res, reviewsCollection)
+    );
 
     // Rakib01110 branch
     app.get("/users", verifyJWT, verifyAdmin, async (req, res) => {
