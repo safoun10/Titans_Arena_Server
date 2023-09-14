@@ -72,6 +72,7 @@ async function run() {
     const commentsCollection = client.db("titanArena").collection("comments");
     const reviewsCollection = client.db("titanArena").collection("reviews");
     const socialLinksCollection = client.db("titanArena").collection("socialLinks");
+    const teamMembersCollection = client.db("titanArena").collection("teamMembers");
 
     const espMatchfixeredCollection = client
       .db("titanArena")
@@ -211,15 +212,20 @@ async function run() {
       flipCardGames(req, res, socialLinksCollection)
     });
 
+
+    app.get("/team-members", async (req, res) => {
+      flipCardGames(req, res, teamMembersCollection)
+    });
+
     // --------------------------------------------------------------------------------------------------
 
     app.get("/", (req, res) => {
-      res.send("TitanArena is runing");
+      res.send("Titans Arena Server is running");
     });
 
     await client.db("admin").command({ ping: 1 });
     console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!"
+      "Pinged your deployment. You are successfully connected to MongoDB!"
     );
   } finally {
     // Ensures that the client will close when you finish/error
@@ -231,5 +237,5 @@ run().catch((error) => {
 });
 
 app.listen(port, (req, res) => {
-  console.log("Titans Arena is sitting on port", port);
+  console.log("Titans Arena is running on port", port);
 });
