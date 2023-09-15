@@ -14,7 +14,6 @@ const { gameDetails } = require("./AlaminHasan/gameDetails");
 const { editProfile } = require("./AlaminHasan/editProfile");
 const { profile } = require("./AlaminHasan/profile");
 const { flipCardGames } = require("./RAHI/flipCardGames");
-
 const { Comments } = require("./NABIL/Comments");
 const { GetComments } = require("./NABIL/GetComments");
 const { Reviews } = require("./NABIL/Reviews");
@@ -24,6 +23,10 @@ const { FixeredMatchDB } = require("./Rakib/FixeredMatchDB");
 const { myComments } = require("./AlaminHasan/myComments");
 const { singleGameComments } = require("./AlaminHasan/singleGameComments");
 const { singleReviews } = require("./AlaminHasan/singleReviews");
+const { addTournaments } = require("./AlaminHasan/addTournaments");
+const { getTournaments } = require("./AlaminHasan/getTournaments");
+const { enrollTournaments } = require("./AlaminHasan/enrollTournaments");
+
 // middleware
 app.use(cors());
 app.use(express.json());
@@ -72,6 +75,19 @@ async function run() {
     const blogsCollection = client.db("titanArena").collection("blogs");
     const commentsCollection = client.db("titanArena").collection("comments");
     const reviewsCollection = client.db("titanArena").collection("reviews");
+    const socialLinksCollection = client
+      .db("titanArena")
+      .collection("socialLinks");
+    const teamMembersCollection = client
+      .db("titanArena")
+      .collection("teamMembers");
+    const homeReviewCollection = client
+      .db("titanArena")
+      .collection("HomeReview");
+    const tournamentsCollection = client
+      .db("titanArena")
+      .collection("tournaments");
+
     const espMatchfixeredCollection = client
       .db("titanArena")
       .collection("matchFixeredDb");
@@ -115,8 +131,8 @@ async function run() {
     app.get("/users/admin/:email", verifyJWT, async (req, res) =>
       FindAdmin(req, res, usersCollection)
     );
-    app.get("/userInfo/:email", async (req, res) =>
-      UserInfo(req, res, usersCollection)
+    app.get("/addEnroll/:email", async (req, res) =>
+    enrollTournaments(req, res, usersCollection)
     );
     app.get("/comments", async (req, res) =>
       GetComments(req, res, commentsCollection)
@@ -149,6 +165,16 @@ async function run() {
     });
     app.get("/reviews/:game_id", async (req, res) =>
       singleReviews(req, res, reviewsCollection)
+    );
+
+    app.post("/tournaments", async (req, res) =>
+      addTournaments(req, res, tournamentsCollection)
+    );
+    app.get("/tournaments", async (req, res) =>
+      getTournaments(req, res, tournamentsCollection)
+    );
+    app.patch("/userInfo/:email", async (req, res) =>
+      (req, res, usersCollection)
     );
 
     // Rakib01110 branch
@@ -211,14 +237,29 @@ async function run() {
     });
 
     // --------------------------------------------------------------------------------------------------
+    // This is Safoun
+
+    app.get("/social-links", async (req, res) => {
+      flipCardGames(req, res, socialLinksCollection);
+    });
+
+    app.get("/team-members", async (req, res) => {
+      flipCardGames(req, res, teamMembersCollection);
+    });
+
+    app.get("/home-review", async (req, res) => {
+      flipCardGames(req, res, homeReviewCollection);
+    });
+
+    // --------------------------------------------------------------------------------------------------
 
     app.get("/", (req, res) => {
-      res.send("TitanArena is runing");
+      res.send("Titans Arena Server is running");
     });
 
     await client.db("admin").command({ ping: 1 });
     console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!"
+      "Pinged your deployment. You are successfully connected to MongoDB!"
     );
   } finally {
     // Ensures that the client will close when you finish/error
@@ -230,7 +271,5 @@ run().catch((error) => {
 });
 
 app.listen(port, (req, res) => {
-  console.log("Titans Arena is sitting on port", port);
-}); 
-
-
+  console.log("Titans Arena is running on port", port);
+});
