@@ -9,7 +9,8 @@ const { searchGames } = require("./NABIL/searchGames");
 const { DeleteUsers } = require("./NABIL/DeleteUsers");
 const { MakeAdmin } = require("./NABIL/MakeAdmin");
 const { FindAdmin } = require("./NABIL/FindAdmin");
-const {flipCardGames} = require("./RAHI/flipCardGames")
+const { flipCardGames } = require("./RAHI/flipCardGames");
+const { addBlog } = require("./RAHI/addBlog");
 const port = process.env.PORT || 5000;
 
 // middleware
@@ -58,7 +59,9 @@ async function run() {
     const allGames = client.db("titanArena").collection("games");
     const usersCollection = client.db("titanArena").collection("users");
     const blogsCollection = client.db("titanArena").collection("blogs");
-    const flipGamesCollection = client.db("titanArena").collection("flipCardGames");
+    const flipGamesCollection = client
+      .db("titanArena")
+      .collection("flipCardGames");
 
     app.post("/jwt", async (req, res) => {
       const user = req.body;
@@ -170,9 +173,14 @@ async function run() {
     // the codes of Rahi
 
     app.get("/flip-games", async (req, res) => {
-      flipCardGames(req, res, flipGamesCollection)
+      flipCardGames(req, res, flipGamesCollection);
     });
 
+    // add new blog
+
+    app.post("/blogs", async (req, res) => {
+      addBlog(req, res, blogsCollection);
+    });
     // --------------------------------------------------------------------------------------------------
 
     app.get("/", (req, res) => {
