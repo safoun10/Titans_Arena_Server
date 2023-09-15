@@ -23,6 +23,10 @@ const { FixeredMatchDB } = require("./Rakib/FixeredMatchDB");
 const { myComments } = require("./AlaminHasan/myComments");
 const { singleGameComments } = require("./AlaminHasan/singleGameComments");
 const { singleReviews } = require("./AlaminHasan/singleReviews");
+const { addTournaments } = require("./AlaminHasan/addTournaments");
+const { getTournaments } = require("./AlaminHasan/getTournaments");
+const { enrollTournaments } = require("./AlaminHasan/enrollTournaments");
+
 // middleware
 app.use(cors());
 app.use(express.json());
@@ -71,9 +75,18 @@ async function run() {
     const blogsCollection = client.db("titanArena").collection("blogs");
     const commentsCollection = client.db("titanArena").collection("comments");
     const reviewsCollection = client.db("titanArena").collection("reviews");
-    const socialLinksCollection = client.db("titanArena").collection("socialLinks");
-    const teamMembersCollection = client.db("titanArena").collection("teamMembers");
-    const homeReviewCollection = client.db("titanArena").collection("HomeReview");
+    const socialLinksCollection = client
+      .db("titanArena")
+      .collection("socialLinks");
+    const teamMembersCollection = client
+      .db("titanArena")
+      .collection("teamMembers");
+    const homeReviewCollection = client
+      .db("titanArena")
+      .collection("HomeReview");
+    const tournamentsCollection = client
+      .db("titanArena")
+      .collection("tournaments");
 
     const espMatchfixeredCollection = client
       .db("titanArena")
@@ -118,8 +131,8 @@ async function run() {
     app.get("/users/admin/:email", verifyJWT, async (req, res) =>
       FindAdmin(req, res, usersCollection)
     );
-    app.get("/userInfo/:email", async (req, res) =>
-      UserInfo(req, res, usersCollection)
+    app.get("/addEnroll/:email", async (req, res) =>
+    enrollTournaments(req, res, usersCollection)
     );
     app.get("/comments", async (req, res) =>
       GetComments(req, res, commentsCollection)
@@ -154,12 +167,21 @@ async function run() {
       singleReviews(req, res, reviewsCollection)
     );
 
+    app.post("/tournaments", async (req, res) =>
+      addTournaments(req, res, tournamentsCollection)
+    );
+    app.get("/tournaments", async (req, res) =>
+      getTournaments(req, res, tournamentsCollection)
+    );
+    app.patch("/userInfo/:email", async (req, res) =>
+      (req, res, usersCollection)
+    );
+
     // Rakib01110 branch
     app.get("/users", verifyJWT, verifyAdmin, async (req, res) => {
       const user = await usersCollection.find().toArray();
       res.send(user);
     });
-
 
     app.post("/users", async (req, res) => {
       const users = req.body;
@@ -218,17 +240,15 @@ async function run() {
     // This is Safoun
 
     app.get("/social-links", async (req, res) => {
-      flipCardGames(req, res, socialLinksCollection)
+      flipCardGames(req, res, socialLinksCollection);
     });
-
 
     app.get("/team-members", async (req, res) => {
-      flipCardGames(req, res, teamMembersCollection)
+      flipCardGames(req, res, teamMembersCollection);
     });
 
-
     app.get("/home-review", async (req, res) => {
-      flipCardGames(req, res, homeReviewCollection)
+      flipCardGames(req, res, homeReviewCollection);
     });
 
     // --------------------------------------------------------------------------------------------------
