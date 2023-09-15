@@ -25,7 +25,7 @@ const { singleGameComments } = require("./AlaminHasan/singleGameComments");
 const { singleReviews } = require("./AlaminHasan/singleReviews");
 const { addTournaments } = require("./AlaminHasan/addTournaments");
 const { getTournaments } = require("./AlaminHasan/getTournaments");
-const { enrollTournaments } = require("./AlaminHasan/enrollTournaments");
+
 
 // middleware
 app.use(cors());
@@ -173,9 +173,7 @@ async function run() {
     app.get("/tournaments", async (req, res) =>
       getTournaments(req, res, tournamentsCollection)
     );
-    app.patch("/userInfo/:email", async (req, res) =>
-      (req, res, usersCollection)
-    );
+
 
     // Rakib01110 branch
     app.get("/users", verifyJWT, verifyAdmin, async (req, res) => {
