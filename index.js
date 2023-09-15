@@ -3,7 +3,12 @@ const app = express();
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
+app.use(cors());
+app.use(express.json());
+const port = process.env.PORT || 5000;
+
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+
 const { games } = require("./NABIL/games");
 const { searchGames } = require("./NABIL/searchGames");
 const { DeleteUsers } = require("./NABIL/DeleteUsers");
@@ -14,18 +19,13 @@ const { gameDetails } = require("./AlaminHasan/gameDetails");
 const { editProfile } = require("./AlaminHasan/editProfile");
 const { profile } = require("./AlaminHasan/profile");
 const { flipCardGames } = require("./RAHI/flipCardGames");
-
 const { Comments } = require("./NABIL/Comments");
 const { GetComments } = require("./NABIL/GetComments");
 const { Reviews } = require("./NABIL/Reviews");
 const { GetReviews } = require("./NABIL/GetReviews");
-const port = process.env.PORT || 5000;
 const { FixeredMatchDB } = require("./Rakib/FixeredMatchDB");
 const { myComments } = require("./AlaminHasan/myComments");
 const { singleGameComments } = require("./AlaminHasan/singleGameComments");
-// middleware
-app.use(cors());
-app.use(express.json());
 
 // Verify JWT
 const verifyJWT = (req, res, next) => {
