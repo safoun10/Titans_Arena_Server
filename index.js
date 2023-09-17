@@ -131,9 +131,10 @@ async function run() {
     app.get("/users/admin/:email", verifyJWT, async (req, res) =>
       FindAdmin(req, res, usersCollection)
     );
-    app.get("/addEnroll/:email", async (req, res) =>
-    enrollTournaments(req, res, usersCollection)
+    app.get("/userInfo/:email", async (req, res) =>
+      UserInfo(req, res, usersCollection)
     );
+
     app.get("/comments", async (req, res) =>
       GetComments(req, res, commentsCollection)
     );
