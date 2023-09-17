@@ -18,6 +18,7 @@ const { Comments } = require("./NABIL/Comments");
 const { GetComments } = require("./NABIL/GetComments");
 const { Reviews } = require("./NABIL/Reviews");
 const { GetReviews } = require("./NABIL/GetReviews");
+const { addBlog } = require("./RAHI/addBlog");
 const port = process.env.PORT || 5000;
 const { FixeredMatchDB } = require("./Rakib/FixeredMatchDB");
 const { myComments } = require("./AlaminHasan/myComments");
@@ -25,7 +26,6 @@ const { singleGameComments } = require("./AlaminHasan/singleGameComments");
 const { singleReviews } = require("./AlaminHasan/singleReviews");
 const { addTournaments } = require("./AlaminHasan/addTournaments");
 const { getTournaments } = require("./AlaminHasan/getTournaments");
-
 
 // middleware
 app.use(cors());
@@ -131,9 +131,10 @@ async function run() {
     app.get("/users/admin/:email", verifyJWT, async (req, res) =>
       FindAdmin(req, res, usersCollection)
     );
-    app.get("/addEnroll/:email", async (req, res) =>
-    enrollTournaments(req, res, usersCollection)
+    app.get("/userInfo/:email", async (req, res) =>
+      UserInfo(req, res, usersCollection)
     );
+
     app.get("/comments", async (req, res) =>
       GetComments(req, res, commentsCollection)
     );
@@ -173,7 +174,6 @@ async function run() {
     app.get("/tournaments", async (req, res) =>
       getTournaments(req, res, tournamentsCollection)
     );
-
 
     // Rakib01110 branch
     app.get("/users", verifyJWT, verifyAdmin, async (req, res) => {
@@ -249,6 +249,11 @@ async function run() {
       flipCardGames(req, res, homeReviewCollection);
     });
 
+    // add new blog
+
+    app.post("/blogs", async (req, res) => {
+      addBlog(req, res, blogsCollection);
+    });
     // --------------------------------------------------------------------------------------------------
 
     app.get("/", (req, res) => {
