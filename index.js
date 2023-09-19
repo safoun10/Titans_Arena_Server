@@ -136,7 +136,7 @@ async function run() {
       FindAdmin(req, res, usersCollection)
     );
     app.get("/addEnroll/:email", async (req, res) =>
-    enrollTournaments(req, res, usersCollection)
+      enrollTournaments(req, res, usersCollection)
     );
     app.get("/comments", async (req, res) =>
       GetComments(req, res, commentsCollection)
