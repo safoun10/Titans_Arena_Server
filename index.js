@@ -132,7 +132,7 @@ async function run() {
       FindAdmin(req, res, usersCollection)
     );
     app.get("/addEnroll/:email", async (req, res) =>
-    enrollTournaments(req, res, usersCollection)
+      enrollTournaments(req, res, usersCollection)
     );
     app.get("/comments", async (req, res) =>
       GetComments(req, res, commentsCollection)
@@ -203,6 +203,17 @@ async function run() {
     app.get("/espMatchFixered/:id", async (req, res) =>
       FixeredMatchDB(req, res, espMatchfixeredCollection)
     );
+
+    app.post("/espMatchFixered", async (req, res) => {
+
+
+      const fixered = req.body
+      const result = await espMatchfixeredCollection.insertOne(fixered);
+      res.send(result);
+    })
+
+
+
 
     // Here is saiful Islam code
     // get all the blogs from database
