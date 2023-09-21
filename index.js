@@ -1,7 +1,9 @@
 const express = require("express");
+const bodyParser = require("body-parser");
 const app = express();
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
+app.use(bodyParser.json());
 require("dotenv").config();
 app.use(cors());
 app.use(express.json());
@@ -23,13 +25,34 @@ const { Comments } = require("./NABIL/Comments");
 const { GetComments } = require("./NABIL/GetComments");
 const { Reviews } = require("./NABIL/Reviews");
 const { GetReviews } = require("./NABIL/GetReviews");
+const { addBlog } = require("./RAHI/addBlog");
+const port = process.env.PORT || 5000;
 const { FixeredMatchDB } = require("./Rakib/FixeredMatchDB");
 const { myComments } = require("./AlaminHasan/myComments");
 const { singleGameComments } = require("./AlaminHasan/singleGameComments");
 const { singleReviews } = require("./AlaminHasan/singleReviews");
 const { addTournaments } = require("./AlaminHasan/addTournaments");
 const { getTournaments } = require("./AlaminHasan/getTournaments");
-
+const { enrollTournaments } = require("./AlaminHasan/enrollTournaments");
+const {
+  myEnrolledTournaments,
+} = require("./AlaminHasan/myEnrolledTournaments");
+const {
+  singleEnrolledTournament,
+} = require("./AlaminHasan/singleEnrolledTorunament");
+const { removeTournament } = require("./AlaminHasan/removeTournaments");
+const { gameBookMark } = require("./AlaminHasan/gameBookMark");
+const { blogBookMark } = require("./AlaminHasan/blogBookMark");
+const { removeGameBookMark } = require("./AlaminHasan/removeGameBookMark");
+const { getGameBookMark } = require("./AlaminHasan/getGameBookMark");
+const { getBlogBookMark } = require("./AlaminHasan/getBlogBookMark");
+const { removeBlogBookMark } = require("./AlaminHasan/removeBlogBookMark");
+const {
+  getEnrolledTournament,
+} = require("./AlaminHasan/getEnrolledTournament");
+const {
+  removeEnrolledTournament,
+} = require("./AlaminHasan/removeEndrolledTournament");
 
 // middleware
 app.use(cors());
@@ -135,9 +158,10 @@ async function run() {
     app.get("/users/admin/:email", verifyJWT, async (req, res) =>
       FindAdmin(req, res, usersCollection)
     );
-    app.get("/addEnroll/:email", async (req, res) =>
-      enrollTournaments(req, res, usersCollection)
+    app.get("/userInfo/:email", async (req, res) =>
+      UserInfo(req, res, usersCollection)
     );
+
     app.get("/comments", async (req, res) =>
       GetComments(req, res, commentsCollection)
     );
@@ -157,7 +181,6 @@ async function run() {
     app.get("/userProfile/:id", async (req, res) => {
       profile(req, res, usersCollection);
     });
-
     app.patch("/usersInfo/:email", async (req, res) =>
       editProfile(req, res, usersCollection)
     );
@@ -170,14 +193,46 @@ async function run() {
     app.get("/reviews/:game_id", async (req, res) =>
       singleReviews(req, res, reviewsCollection)
     );
-
     app.post("/tournaments", async (req, res) =>
       addTournaments(req, res, tournamentsCollection)
     );
+    app.patch("/enrollTournaments/:email", async (req, res) =>
+      enrollTournaments(req, res, usersCollection)
+    );
+    app.get("/enrolledTournaments", async (req, res) => {
+      myEnrolledTournaments(req, res, usersCollection);
+    });
+    app.patch("/gameBookMarks/:email", async (req, res) =>
+      gameBookMark(req, res, usersCollection)
+    );
+    app.get("/gameBookMark/:email", async (req, res) => {
+      getGameBookMark(req, res, usersCollection);
+    });
+    app.patch("/removeGameBookmark/:email", async (req, res) => {
+      removeGameBookMark(req, res, usersCollection);
+    });
     app.get("/tournaments", async (req, res) =>
       getTournaments(req, res, tournamentsCollection)
     );
+    app.patch("/blogBookMarks/:email", async (req, res) =>
+      blogBookMark(req, res, usersCollection)
+    );
+    app.get("/blogBookMarks/:email", async (req, res) => {
+      getBlogBookMark(req, res, usersCollection);
+    });
+    app.patch("/removeBlogBookmark/:email", async (req, res) => {
+      removeBlogBookMark(req, res, usersCollection);
+    });
 
+    app.get("/enrolledTournaments/:email", async (req, res) => {
+      getEnrolledTournament(req, res, usersCollection);
+    });
+    app.get("/tournaments/:id", async (req, res) =>
+      singleEnrolledTournament(req, res, tournamentsCollection)
+    );
+    app.patch("/removeEnrolledTournament/:email", async (req, res) => {
+      removeEnrolledTournament(req, res, tournamentsCollection);
+    });
 
     // Rakib01110 branch
     app.get("/users", verifyJWT, verifyAdmin, async (req, res) => {
@@ -253,6 +308,11 @@ async function run() {
       flipCardGames(req, res, homeReviewCollection);
     });
 
+    // add new blog
+
+    app.post("/blogs", async (req, res) => {
+      addBlog(req, res, blogsCollection);
+    });
     // --------------------------------------------------------------------------------------------------
 
     app.get("/", (req, res) => {
