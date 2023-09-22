@@ -1,7 +1,9 @@
 const express = require("express");
+const bodyParser = require("body-parser");
 const app = express();
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
+app.use(bodyParser.json());
 require("dotenv").config();
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const { games } = require("./NABIL/games");
@@ -13,16 +15,40 @@ const { UserInfo } = require("./NABIL/UserInfo");
 const { gameDetails } = require("./AlaminHasan/gameDetails");
 const { editProfile } = require("./AlaminHasan/editProfile");
 const { profile } = require("./AlaminHasan/profile");
-const {flipCardGames} = require("./RAHI/flipCardGames")
-
-
+const { flipCardGames } = require("./RAHI/flipCardGames");
 const { Comments } = require("./NABIL/Comments");
 const { GetComments } = require("./NABIL/GetComments");
 const { Reviews } = require("./NABIL/Reviews");
 const { GetReviews } = require("./NABIL/GetReviews");
+const { addBlog } = require("./RAHI/addBlog");
 const port = process.env.PORT || 5000;
 const { FixeredMatchDB } = require("./Rakib/FixeredMatchDB");
 const { myComments } = require("./AlaminHasan/myComments");
+const { singleGameComments } = require("./AlaminHasan/singleGameComments");
+const { singleReviews } = require("./AlaminHasan/singleReviews");
+const { addTournaments } = require("./AlaminHasan/addTournaments");
+const { getTournaments } = require("./AlaminHasan/getTournaments");
+const { enrollTournaments } = require("./AlaminHasan/enrollTournaments");
+const {
+  myEnrolledTournaments,
+} = require("./AlaminHasan/myEnrolledTournaments");
+const {
+  singleEnrolledTournament,
+} = require("./AlaminHasan/singleEnrolledTorunament");
+const { removeTournament } = require("./AlaminHasan/removeTournaments");
+const { gameBookMark } = require("./AlaminHasan/gameBookMark");
+const { blogBookMark } = require("./AlaminHasan/blogBookMark");
+const { removeGameBookMark } = require("./AlaminHasan/removeGameBookMark");
+const { getGameBookMark } = require("./AlaminHasan/getGameBookMark");
+const { getBlogBookMark } = require("./AlaminHasan/getBlogBookMark");
+const { removeBlogBookMark } = require("./AlaminHasan/removeBlogBookMark");
+const {
+  getEnrolledTournament,
+} = require("./AlaminHasan/getEnrolledTournament");
+const {
+  removeEnrolledTournament,
+} = require("./AlaminHasan/removeEndrolledTournament");
+
 // middleware
 app.use(cors());
 app.use(express.json());
@@ -71,10 +97,25 @@ async function run() {
     const blogsCollection = client.db("titanArena").collection("blogs");
     const commentsCollection = client.db("titanArena").collection("comments");
     const reviewsCollection = client.db("titanArena").collection("reviews");
+    const socialLinksCollection = client
+      .db("titanArena")
+      .collection("socialLinks");
+    const teamMembersCollection = client
+      .db("titanArena")
+      .collection("teamMembers");
+    const homeReviewCollection = client
+      .db("titanArena")
+      .collection("HomeReview");
+    const tournamentsCollection = client
+      .db("titanArena")
+      .collection("tournaments");
+
     const espMatchfixeredCollection = client
       .db("titanArena")
       .collection("matchFixeredDb");
-    const flipGamesCollection = client.db("titanArena").collection("flipCardGames");
+    const flipGamesCollection = client
+      .db("titanArena")
+      .collection("flipCardGames");
 
     app.post("/jwt", async (req, res) => {
       const user = req.body;
@@ -115,6 +156,7 @@ async function run() {
     app.get("/userInfo/:email", async (req, res) =>
       UserInfo(req, res, usersCollection)
     );
+
     app.get("/comments", async (req, res) =>
       GetComments(req, res, commentsCollection)
     );
@@ -134,12 +176,57 @@ async function run() {
     app.get("/userProfile/:id", async (req, res) => {
       profile(req, res, usersCollection);
     });
-
     app.patch("/usersInfo/:email", async (req, res) =>
       editProfile(req, res, usersCollection)
     );
     app.get("/myComments/:user_email", async (req, res) => {
       myComments(req, res, commentsCollection);
+    });
+    app.get("/singleGameComments/:game_id", async (req, res) => {
+      singleGameComments(req, res, commentsCollection);
+    });
+    app.get("/reviews/:game_id", async (req, res) =>
+      singleReviews(req, res, reviewsCollection)
+    );
+    app.post("/tournaments", async (req, res) =>
+      addTournaments(req, res, tournamentsCollection)
+    );
+    app.patch("/enrollTournaments/:email", async (req, res) =>
+      enrollTournaments(req, res, usersCollection)
+    );
+    app.get("/enrolledTournaments", async (req, res) => {
+      myEnrolledTournaments(req, res, usersCollection);
+    });
+    app.patch("/gameBookMarks/:email", async (req, res) =>
+      gameBookMark(req, res, usersCollection)
+    );
+    app.get("/gameBookMark/:email", async (req, res) => {
+      getGameBookMark(req, res, usersCollection);
+    });
+    app.patch("/removeGameBookmark/:email", async (req, res) => {
+      removeGameBookMark(req, res, usersCollection);
+    });
+    app.get("/tournaments", async (req, res) =>
+      getTournaments(req, res, tournamentsCollection)
+    );
+    app.patch("/blogBookMarks/:email", async (req, res) =>
+      blogBookMark(req, res, usersCollection)
+    );
+    app.get("/blogBookMarks/:email", async (req, res) => {
+      getBlogBookMark(req, res, usersCollection);
+    });
+    app.patch("/removeBlogBookmark/:email", async (req, res) => {
+      removeBlogBookMark(req, res, usersCollection);
+    });
+
+    app.get("/enrolledTournaments/:email", async (req, res) => {
+      getEnrolledTournament(req, res, usersCollection);
+    });
+    app.get("/tournaments/:id", async (req, res) =>
+      singleEnrolledTournament(req, res, tournamentsCollection)
+    );
+    app.patch("/removeEnrolledTournament/:email", async (req, res) => {
+      removeEnrolledTournament(req, res, usersCollection);
     });
 
     // Rakib01110 branch
@@ -171,6 +258,17 @@ async function run() {
       FixeredMatchDB(req, res, espMatchfixeredCollection)
     );
 
+    app.post("/espMatchFixered", async (req, res) => {
+
+
+      const fixered = req.body
+      const result = await espMatchfixeredCollection.insertOne(fixered);
+      res.send(result);
+    })
+
+
+
+
     // Here is saiful Islam code
     // get all the blogs from database
     app.get("/blogs", async (req, res) => {
@@ -198,18 +296,38 @@ async function run() {
     // the codes of Rahi
 
     app.get("/flip-games", async (req, res) => {
-      flipCardGames(req, res, flipGamesCollection)
+      flipCardGames(req, res, flipGamesCollection);
     });
 
     // --------------------------------------------------------------------------------------------------
+    // This is Safoun
+
+    app.get("/social-links", async (req, res) => {
+      flipCardGames(req, res, socialLinksCollection);
+    });
+
+    app.get("/team-members", async (req, res) => {
+      flipCardGames(req, res, teamMembersCollection);
+    });
+
+    app.get("/home-review", async (req, res) => {
+      flipCardGames(req, res, homeReviewCollection);
+    });
+
+    // add new blog
+
+    app.post("/blogs", async (req, res) => {
+      addBlog(req, res, blogsCollection);
+    });
+    // --------------------------------------------------------------------------------------------------
 
     app.get("/", (req, res) => {
-      res.send("TitanArena is runing");
+      res.send("Titans Arena Server is running");
     });
 
     await client.db("admin").command({ ping: 1 });
     console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!"
+      "Pinged your deployment. You are successfully connected to MongoDB!"
     );
   } finally {
     // Ensures that the client will close when you finish/error
@@ -221,5 +339,5 @@ run().catch((error) => {
 });
 
 app.listen(port, (req, res) => {
-  console.log("Titans Arena is sitting on port", port);
+  console.log("Titans Arena is running on port", port);
 });
