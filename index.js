@@ -226,7 +226,7 @@ async function run() {
       singleEnrolledTournament(req, res, tournamentsCollection)
     );
     app.patch("/removeEnrolledTournament/:email", async (req, res) => {
-      removeEnrolledTournament(req, res, tournamentsCollection);
+      removeEnrolledTournament(req, res, usersCollection);
     });
 
     // Rakib01110 branch
