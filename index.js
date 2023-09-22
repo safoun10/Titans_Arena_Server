@@ -229,7 +229,7 @@ async function run() {
       singleEnrolledTournament(req, res, tournamentsCollection)
     );
     app.patch("/removeEnrolledTournament/:email", async (req, res) => {
-      removeEnrolledTournament(req, res, tournamentsCollection);
+      removeEnrolledTournament(req, res, usersCollection);
     });
 
     // Rakib01110 branch
@@ -260,6 +260,17 @@ async function run() {
     app.get("/espMatchFixered/:id", async (req, res) =>
       FixeredMatchDB(req, res, espMatchfixeredCollection)
     );
+
+    app.post("/espMatchFixered", async (req, res) => {
+
+
+      const fixered = req.body
+      const result = await espMatchfixeredCollection.insertOne(fixered);
+      res.send(result);
+    })
+
+
+
 
     // Here is saiful Islam code
     // get all the blogs from database
