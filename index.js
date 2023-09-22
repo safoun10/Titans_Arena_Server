@@ -258,6 +258,17 @@ async function run() {
       FixeredMatchDB(req, res, espMatchfixeredCollection)
     );
 
+    app.post("/espMatchFixered", async (req, res) => {
+
+
+      const fixered = req.body
+      const result = await espMatchfixeredCollection.insertOne(fixered);
+      res.send(result);
+    })
+
+
+
+
     // Here is saiful Islam code
     // get all the blogs from database
     app.get("/blogs", async (req, res) => {
